@@ -43,6 +43,9 @@ files will allow it to work with a new user.
 -  The HTML side of the server is bear bones, can be made much more pretty and to support editing
 the result report in it (and saving locally).
 - Port `3000` is permanent currently, as it is also hard-coded on Anilist client side.
+- Add "soft block" to not get notifictions into the report from specific people.
+- Move the files in resource into `output` and `input` folders in there.
+- Can change this whole project from web server to a CLI script (If I knew how oAuth worked to begin with, I would go on that route).
 
 # Credit
 This project was written by [@github/NineLord](https://github.com/NineLord).
