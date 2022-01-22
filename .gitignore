@@ -1,4 +1,5 @@
 resources/accessToken.json
 resources/reporter.json
+resources/reporterPretty.json
 node_modules/*
 .idea/*

@@ -97,7 +97,7 @@ class Reporter {
 			case 'ACTIVITY_REPLY_LIKE': // ActivityReplyLikeNotification
 			case 'THREAD_COMMENT_LIKE': // ThreadCommentLikeNotification
 			case 'THREAD_LIKE': // ThreadLikeNotification
-				const name = activity['user']['name'];
+				const name = this.#getUserURL(activity['user']['name']);
 				this.#likes[name] = this.#likes[name] === undefined ? 1 : this.#likes[name] + 1;
 				break;
 
@@ -105,19 +105,18 @@ class Reporter {
 			case 'ACTIVITY_MENTION': // ActivityMentionNotification
 			case 'ACTIVITY_REPLY': // ActivityReplyNotification
 			case 'ACTIVITY_REPLY_SUBSCRIBED': // ActivityReplySubscribedNotification
-				this.#comments.activityId.add(activity['activityId']);
+				this.#comments.activityId.add(this.#getActivityURL(activity['activityId']));
 				break;
 			case 'THREAD_COMMENT_MENTION': // ThreadCommentMentionNotification
 			case 'THREAD_COMMENT_REPLY': // ThreadCommentReplyNotification
 			case 'THREAD_SUBSCRIBED': // ThreadCommentSubscribedNotification
 				const commentId = activity['commentId'];
 				const threadId = activity['thread']['id'];
-				const key = `${threadId}_${commentId}`
-				this.#comments.commentId.add(key);
+				this.#comments.commentId.add(this.#getCommentURL(threadId, commentId));
 				break;
 
 			case 'FOLLOWING': // FollowingNotification
-				this.#follows.add(activity['user']['name']);
+				this.#follows.add(this.#getUserURL(activity['user']['name']));
 				break;
 
 			case 'AIRING': // AiringNotification
@@ -209,27 +208,8 @@ class Reporter {
 		this.#lastActivity = json['lastActivity'];
 	}
 	toString() {
-		const likes = Object.fromEntries(
-			Object.entries(this.#likes)
-				.sort(([,a],[,b]) => a-b)
-				.map(innerArray => [this.#getUserURL(innerArray[0]), innerArray[1]])
-		);
-		const comments = [
-			...[...this.#comments.activityId.keys()].map(activityId => this.#getActivityURL(activityId)),
-			...[...this.#comments.commentId.keys()].map(key => {
-				const values = key.split('_');
-				return this.#getCommentURL(values[0], values[1]);
-			})
-		];
-		const follows = [...this.#follows.keys()].map(name => this.#getUserURL(name));
-
-		const json = {
-			likes: likes,
-			comments: comments,
-			follows: follows,
-			mediaUpdates: this.#mediaUpdates,
-			lastActivity: this.#lastActivity
-		};
+		const json = this.serialize();
+		json['likes'] = Object.fromEntries( Object.entries(json['likes']) .sort(([,a],[,b]) => a-b) );
 		return JSON.stringify(json, null, 2);
 	}
 	//#endregion
