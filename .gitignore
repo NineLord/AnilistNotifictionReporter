@@ -1,0 +1,4 @@
+resources/accessToken.json
+resources/reporter.json
+node_modules/*
+.idea/*
