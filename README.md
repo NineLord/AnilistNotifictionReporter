@@ -45,7 +45,12 @@ the result report in it (and saving locally).
 - Port `3000` is permanent currently, as it is also hard-coded on Anilist client side.
 - Add "soft block" to not get notifictions into the report from specific people.
 - Move the files in resource into `output` and `input` folders in there.
-- Can change this whole project from web server to a CLI script (If I knew how oAuth worked to begin with, I would go on that route).
+- Can change this whole project from web server to a CLI script (If I knew how oAuth worked to begin with, I would go on that route).  
+
+Will be done soon:
+- Change so the server will shutdown after a single use of the report.
+- Add more info to activity notifiction (when you get actual like to the activity to check the new comments).  
+Sometimes the link isn't working anymore and its hard to know what you missed.
 
 # Credit
 This project was written by [@github/NineLord](https://github.com/NineLord).
