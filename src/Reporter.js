@@ -45,7 +45,8 @@ class Reporter {
 	constructor() {
 		this.#likes = {};
 		this.#comments = {
-			activityId: new Set(),
+			activityId: {},
+			message: new Set(),
 			commentId: new Set()
 		};
 		this.#follows = new Set();
@@ -102,10 +103,16 @@ class Reporter {
 				break;
 
 			case 'ACTIVITY_MESSAGE': // ActivityMessageNotification
+				this.#comments.message.add(this.#getActivityURL(activity['activityId']));
+				break;
 			case 'ACTIVITY_MENTION': // ActivityMentionNotification
 			case 'ACTIVITY_REPLY': // ActivityReplyNotification
 			case 'ACTIVITY_REPLY_SUBSCRIBED': // ActivityReplySubscribedNotification
-				this.#comments.activityId.add(this.#getActivityURL(activity['activityId']));
+				const link = this.#getActivityURL(activity['activityId']);
+				this.#comments.activityId[link] = {
+					activity: activity['activity'],
+					sender: this.#getUserURL(activity['user']['name'])
+				};
 				break;
 			case 'THREAD_COMMENT_MENTION': // ThreadCommentMentionNotification
 			case 'THREAD_COMMENT_REPLY': // ThreadCommentReplyNotification
@@ -189,7 +196,8 @@ class Reporter {
 		return {
 			likes: this.#likes,
 			comments: {
-				activityId: this.#setToJSON(this.#comments.activityId),
+				activityId: this.#comments.activityId,
+				message: this.#setToJSON(this.#comments.message),
 				commentId: this.#setToJSON(this.#comments.commentId)
 			},
 			follows: this.#setToJSON(this.#follows),
@@ -200,7 +208,8 @@ class Reporter {
 	deserialize(json) { // TODO: add validation here
 		this.#likes = json['likes'];
 		this.#comments = {
-			activityId: this.#JSONtoSet(json['comments']['activityId']),
+			activityId: json['comments']['activityId'],
+			message: this.#JSONtoSet(json['comments']['message']),
 			commentId: this.#JSONtoSet(json['comments']['commentId']),
 		};
 		this.#follows = this.#JSONtoSet(json['follows']);
