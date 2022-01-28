@@ -30,7 +30,8 @@ go to your browser into the following website:
 http://localhost:3000/
 ```
 (The port above is subject to change, it should be the same port as the one found in the `.env` file)   
-To stop the server, simply press `Ctrl` + `C` in your terminal.
+To stop the server, simply press `Ctrl` + `C` in your terminal.  
+Note: the server will shutdown afte single use of the report button.
 
 In this website, you will have a single link, click to run the script.  
 Until the next page loads, the server will load all your notifications into his report,
@@ -45,12 +46,7 @@ the result report in it (and saving locally).
 - Port `3000` is permanent currently, as it is also hard-coded on Anilist client side.
 - Add "soft block" to not get notifictions into the report from specific people.
 - Move the files in resource into `output` and `input` folders in there.
-- Can change this whole project from web server to a CLI script (If I knew how oAuth worked to begin with, I would go on that route).  
-
-Will be done soon:
-- Change so the server will shutdown after a single use of the report.
-- Add more info to activity notifiction (when you get actual like to the activity to check the new comments).  
-Sometimes the link isn't working anymore and its hard to know what you missed.
+- ~~Can change this whole project from web server to a CLI script.~~ Can't be done since the user need to go to the external website (Anilist) and accept giving token to this app.  
 
 # Credit
 This project was written by [@github/NineLord](https://github.com/NineLord).

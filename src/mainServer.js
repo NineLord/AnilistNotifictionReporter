@@ -20,18 +20,17 @@ const mainServer = express();
 mainServer.use('/', indexRouter);
 mainServer.use('/report', reportRouter);
 
-
 // Init stuff before starting the server
 FileSystemRequest.readAsync(process.env.QUERY_FORM_FILE_NAME, FileSystemRequest.FILE_TYPE.Text)
 	.then(queryForm => { // Init the queryForm
 		Logger.debug('mainServer', "reading the qeuryForm file is done", queryForm);
 		process.env.QUERY_FORM = queryForm;
 	})
-	.then(_ => { // Init the reporter
+	.then( () => { // Init the reporter
 		Logger.debug('mainServer', "init process.env.QUERY_FORM is done", process.env.QUERY_FORM);
 		return reporter.initialize();
 	})
-	.then( _ => { // Start the server
+	.then( () => { // Start the server
 		Logger.debug('mainServer', "init reporter is done", reporter.serialize());
 		mainServer.listen(process.env.PORT, () => {
 			Logger.info('mainServer', `Listening on port ${process.env.PORT}`);

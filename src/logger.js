@@ -7,7 +7,7 @@ class Logger {
 		let consoleThrownMessage, htmlThrownMessage;
 
 		if (thrownMessage) {
-			consoleThrownMessage = `:: ${JSON.stringify(thrownMessage, null, 2)}`;
+			consoleThrownMessage = thrownMessage instanceof Error ? `:: \n${thrownMessage.stack}` : `:: ${JSON.stringify(thrownMessage, null, 2)}`;
 			htmlThrownMessage = `:: ${consoleThrownMessage.replace("\n", "<br>")}`;
 		} else {
 			consoleThrownMessage = "";

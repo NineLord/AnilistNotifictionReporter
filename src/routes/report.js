@@ -73,16 +73,34 @@ async function updateLastActivity(token) {
 		});
 }
 
-async function saveTheReport() {
-	return FileSystemRequest.saveAsync(process.env.REPORTER_FILE_NAME, reporter.serialize())
+async function reportToJson() {
+	return reporter.serialize();
+}
+
+async function saveTheReport(jsonReport) {
+	return FileSystemRequest.saveAsync(process.env.REPORTER_FILE_NAME, jsonReport)
 		.then(isSaved => {
 			if (!isSaved)
 				throw new LoggerData(LoggerData.LEVEL.Error, '/report', "saveAsync failed at saveTheReport");
+			return jsonReport;
 		});
 }
 
-async function reportToHTML() {
-	return `<pre>${reporter.toString()}</pre>`;
+async function reportToPrettyJson() {
+	return reporter.serializePretty();
+}
+
+async function saveThePrettyReport(jsonPrettyReport) {
+	return FileSystemRequest.saveAsync(process.env.REPORTER_PRETTY_FILE_NAME, jsonPrettyReport)
+		.then(isSaved => {
+			if (!isSaved)
+				throw new LoggerData(LoggerData.LEVEL.Error, '/report', "saveAsync failed at saveThePrettyReport");
+			return jsonPrettyReport;
+		});
+}
+
+async function reportToHTML(jsonPrettyReport) {
+	return `<pre>${JSON.stringify(jsonPrettyReport, null, 2)}</pre>`;
 }
 
 router.get('/', (request, response) => {
@@ -119,10 +137,16 @@ router.get('/', (request, response) => {
 	prePromise
 		.then(updateTheReport)
 		.then(updateLastActivity)
+		.then(reportToJson)
 		.then(saveTheReport)
+		.then(reportToPrettyJson)
+		.then(saveThePrettyReport)
 		.then(reportToHTML)
 		.then(htmlReport => {
 			response.send(htmlReport);
+		})
+		.then( () => {
+			process.exit(0);
 		})
 		.catch(error => {
 			if (error instanceof LoggerData)

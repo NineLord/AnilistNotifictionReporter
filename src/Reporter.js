@@ -205,6 +205,11 @@ class Reporter {
 			lastActivity: this.#lastActivity
 		};
 	}
+	serializePretty() {
+		const json = this.serialize();
+		json['likes'] = Object.fromEntries( Object.entries(json['likes']) .sort(([,a],[,b]) => a-b) );
+		return json;
+	}
 	deserialize(json) { // TODO: add validation here
 		this.#likes = json['likes'];
 		this.#comments = {
@@ -217,9 +222,7 @@ class Reporter {
 		this.#lastActivity = json['lastActivity'];
 	}
 	toString() {
-		const json = this.serialize();
-		json['likes'] = Object.fromEntries( Object.entries(json['likes']) .sort(([,a],[,b]) => a-b) );
-		return JSON.stringify(json, null, 2);
+		return JSON.stringify(this.serializePretty(), null, 2);
 	}
 	//#endregion
 }
