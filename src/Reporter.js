@@ -41,6 +41,8 @@ class Reporter {
 
 	#lastActivity; // json of the last added activity
 
+	#softblock; // List of usernames that shall not be counted into #likes.
+
 	//#region Constructor
 	constructor() {
 		this.#likes = {};
@@ -52,6 +54,7 @@ class Reporter {
 		this.#follows = new Set();
 		this.#mediaUpdates = [];
 		this.#lastActivity = undefined;
+		this.#softblock = [];
 	}
 
 	async initialize() {
@@ -66,6 +69,20 @@ class Reporter {
 						});
 				else
 					Logger.warn('Reporter/initialize', `${process.env.REPORTER_FILE_NAME} doesn't exists!`);
+			})
+			.then( () => {
+				return FileSystemRequest.existsAsync(process.env.SOFTBLOCK_FILE_NAME, "input")
+			})
+			.then(exists => {
+				Logger.debug('Reporter/initialize', `Got back from existsAsync with file name {${process.env.SOFTBLOCK_FILE_NAME}}`, exists);
+				if (exists)
+					return FileSystemRequest.readAsync(process.env.SOFTBLOCK_FILE_NAME, "input")
+						.then(data => {
+							Logger.debug('Reporter/initialize', `Got back from readAsync with file name {${process.env.SOFTBLOCK_FILE_NAME}}`, data);
+							this.#softblock = data;
+						});
+				else
+					Logger.warn('Reporter/initialize', `${process.env.SOFTBLOCK_FILE_NAME} doesn't exists!`);
 			});
 	}
 	//#endregion
@@ -98,8 +115,11 @@ class Reporter {
 			case 'ACTIVITY_REPLY_LIKE': // ActivityReplyLikeNotification
 			case 'THREAD_COMMENT_LIKE': // ThreadCommentLikeNotification
 			case 'THREAD_LIKE': // ThreadLikeNotification
-				const name = this.#getUserURL(activity['user']['name']);
-				this.#likes[name] = this.#likes[name] === undefined ? 1 : this.#likes[name] + 1;
+				const username = activity['user']['name'];
+				if (this.#softblock.includes(username))
+					break;
+				const userURL = this.#getUserURL(username);
+				this.#likes[userURL] = this.#likes[userURL] === undefined ? 1 : this.#likes[userURL] + 1;
 				break;
 
 			case 'ACTIVITY_MESSAGE': // ActivityMessageNotification

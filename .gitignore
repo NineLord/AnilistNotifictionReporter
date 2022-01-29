@@ -1,4 +1,5 @@
 resources/output/*
+resources/input/softBlock.json
 node_modules/*
 .idea/*
 junk/*
