@@ -78,7 +78,7 @@ async function reportToJson() {
 }
 
 async function saveTheReport(jsonReport) {
-	return FileSystemRequest.saveAsync(process.env.REPORTER_FILE_NAME, jsonReport)
+	return FileSystemRequest.saveAsync(process.env.REPORTER_FILE_NAME, "output", jsonReport)
 		.then(isSaved => {
 			if (!isSaved)
 				throw new LoggerData(LoggerData.LEVEL.Error, '/report', "saveAsync failed at saveTheReport");
@@ -91,7 +91,7 @@ async function reportToPrettyJson() {
 }
 
 async function saveThePrettyReport(jsonPrettyReport) {
-	return FileSystemRequest.saveAsync(process.env.REPORTER_PRETTY_FILE_NAME, jsonPrettyReport)
+	return FileSystemRequest.saveAsync(process.env.REPORTER_PRETTY_FILE_NAME, "output", jsonPrettyReport)
 		.then(isSaved => {
 			if (!isSaved)
 				throw new LoggerData(LoggerData.LEVEL.Error, '/report', "saveAsync failed at saveThePrettyReport");
@@ -120,7 +120,7 @@ router.get('/', (request, response) => {
 				}
 			})
 			.then(jsonToken => {
-				return FileSystemRequest.saveAsync(process.env.ACCESS_TOKEN_FILE_NAME, jsonToken);
+				return FileSystemRequest.saveAsync(process.env.ACCESS_TOKEN_FILE_NAME, "output", jsonToken);
 			})
 			.then(isSaved => {
 				if (isSaved)
@@ -129,7 +129,7 @@ router.get('/', (request, response) => {
 					throw new LoggerData(LoggerData.LEVEL.Error, '/report', "saveAsync failed");
 			});
 	} else // We already have a valid token, read it from file system.
-		prePromise = FileSystemRequest.readAsync(process.env.ACCESS_TOKEN_FILE_NAME)
+		prePromise = FileSystemRequest.readAsync(process.env.ACCESS_TOKEN_FILE_NAME, "output")
 			.then(jsonToken => {
 				return jsonToken['access_token'];
 			});

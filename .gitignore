@@ -1,5 +1,4 @@
-resources/accessToken.json
-resources/reporter.json
-resources/reporterPretty.json
+resources/output/*
 node_modules/*
 .idea/*
+junk/*

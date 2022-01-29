@@ -55,11 +55,11 @@ class Reporter {
 	}
 
 	async initialize() {
-		return FileSystemRequest.existsAsync(process.env.REPORTER_FILE_NAME)
+		return FileSystemRequest.existsAsync(process.env.REPORTER_FILE_NAME, "output")
 			.then(exists => {
 				Logger.debug('Reporter/initialize', `Got back from existsAsync with file name {${process.env.REPORTER_FILE_NAME}}`, exists);
 				if (exists)
-					return FileSystemRequest.readAsync(process.env.REPORTER_FILE_NAME)
+					return FileSystemRequest.readAsync(process.env.REPORTER_FILE_NAME, "output")
 						.then(data => {
 							Logger.debug('Reporter/initialize', `Got back from readAsync with file name {${process.env.REPORTER_FILE_NAME}}`, data);
 							this.deserialize(data);

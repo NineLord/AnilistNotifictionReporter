@@ -23,10 +23,10 @@ router.get('/', async (request, response) => {
 					${button}`);
 	}
 
-	FileSystemRequest.existsAsync(process.env.ACCESS_TOKEN_FILE_NAME)
+	FileSystemRequest.existsAsync(process.env.ACCESS_TOKEN_FILE_NAME, "output")
 		.then(exits => {
 			if (exits)
-				return FileSystemRequest.readAsync(process.env.ACCESS_TOKEN_FILE_NAME)
+				return FileSystemRequest.readAsync(process.env.ACCESS_TOKEN_FILE_NAME, "output")
 					.then(data => {
 						if (!FileSystemRequest.isValidAccessTokenFile(data))
 							throw new LoggerData(LoggerData.LEVEL.Error, '/', `existsAsync return true but readAsync returned invalid token`, data);

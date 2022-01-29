@@ -21,7 +21,7 @@ mainServer.use('/', indexRouter);
 mainServer.use('/report', reportRouter);
 
 // Init stuff before starting the server
-FileSystemRequest.readAsync(process.env.QUERY_FORM_FILE_NAME, FileSystemRequest.FILE_TYPE.Text)
+FileSystemRequest.readAsync(process.env.QUERY_FORM_FILE_NAME, "input", FileSystemRequest.FILE_TYPE.Text)
 	.then(queryForm => { // Init the queryForm
 		Logger.debug('mainServer', "reading the qeuryForm file is done", queryForm);
 		process.env.QUERY_FORM = queryForm;
