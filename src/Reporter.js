@@ -1,4 +1,3 @@
-const { isEqual } = require('lodash');
 const { config } = require('dotenv');
 config();
 
@@ -162,6 +161,14 @@ class Reporter {
 		}
 	}
 
+	#isActivityEqual(activity1, activity2) {
+		return ( // The only fields that all activities has.
+			activity1.id === activity2.id && // For some reason activityId can be change through time, maybe notifiction id can too.
+			activity1.type === activity2.type &&
+			activity1.createdAt === activity2.createdAt
+		);
+	}
+
 	addPage(activities) {
 		if (activities.length === 0)
 			return true;
@@ -175,9 +182,13 @@ class Reporter {
 
 		for (let activity of activities) {
 
+			if (this.#lastActivity.createdAt === activity.createdAt) {
+				Logger.debug('addPage', "Found activity with the same createdAt value", activity);
+			}
+
 			if (result) {
 				this.addActivity(activity);
-			} else if (isEqual(this.#lastActivity, activity)) {
+			} else if (this.#isActivityEqual(this.#lastActivity, activity)) {
 				return true;
 			} else {
 				this.addActivity(activity);
