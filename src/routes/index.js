@@ -19,8 +19,9 @@ router.get('/', async (request, response) => {
 		const button = `<a href="${linkForward}">Get the report</a>`;
 
 		response.send(
-			`${title}<br>
-					${button}`);
+			`<header><style>body {background-color: #4d4d4d; color: #f2f2f2} a:visited {color: #f2f2f2}</style></header>
+			<body>${title}<br>
+			${button}</body>`);
 	}
 
 	FileSystemRequest.existsAsync(process.env.ACCESS_TOKEN_FILE_NAME, "output")

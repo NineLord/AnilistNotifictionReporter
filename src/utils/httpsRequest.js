@@ -19,13 +19,7 @@ class Request {
 	}
 
 	static isValidPageActivity(data) {
-		return (
-			data !== null &&
-				data.hasOwnProperty('data') &&
-				data.data.hasOwnProperty('Page') &&
-				data.data.Page.hasOwnProperty('notifications') &&
-				Array.isArray(data.data.Page.notifications)
-		);
+		return Array.isArray(data?.data?.Page?.notifications);
 	}
 
 	/**

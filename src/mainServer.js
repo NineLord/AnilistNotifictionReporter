@@ -1,4 +1,5 @@
 const { resolve } = require('path');
+const open = require('open');
 const express = require('express');
 const { config } = require('dotenv');
 config();
@@ -32,8 +33,12 @@ FileSystemRequest.readAsync(process.env.QUERY_FORM_FILE_NAME, "input", FileSyste
 	})
 	.then( () => { // Start the server
 		Logger.debug('mainServer', "init reporter is done", reporter.serialize());
+		mainServer.on('error', (error) => {
+			Logger.error('mainServer', 'Caught unknown error:', error);
+		});
 		mainServer.listen(process.env.PORT, () => {
 			Logger.info('mainServer', `Listening on port ${process.env.PORT}`);
+			open(`http://localhost:${process.env.PORT}`);
 		});
 	})
 	.catch(error => {
