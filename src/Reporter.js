@@ -137,7 +137,7 @@ class Reporter {
 			case 'THREAD_COMMENT_REPLY': // ThreadCommentReplyNotification
 			case 'THREAD_SUBSCRIBED': // ThreadCommentSubscribedNotification
 				const commentId = activity['commentId'];
-				const threadId = activity['thread']['id'];
+				const threadId = activity['thread']?.['id'];
 				this.#comments.commentId.add(this.#getCommentURL(threadId, commentId));
 				break;
 
